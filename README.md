@@ -1,1 +1,1 @@
-# zamowienia_magazyn_app
+Temat projektu: Aplikacja do zarządzania zamówieniami i magazynem
