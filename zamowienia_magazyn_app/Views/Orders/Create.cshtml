@@ -1,0 +1,79 @@
+@model zamowienia_magazyn_app.Models.Order
+
+@{
+    ViewData["Title"] = "Nowe Zamówienie";
+    var products = ViewBag.Products as List<zamowienia_magazyn_app.Models.Product>;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0 text-primary">Kreator Zamówienia</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Wybierz Klienta</label>
+                            <select name="clientId" class="form-select form-select-lg" asp-items="ViewBag.ClientId">
+                                <option value="">-- Wybierz klienta --</option>
+                            </select>
+                            <span asp-validation-for="ClientId" class="text-danger"></span>
+                        </div>
+
+                        <h5 class="mb-3 fw-bold border-bottom pb-2">Wybierz Produkty</h5>
+                        
+                        <div class="table-responsive mb-4">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 50%">Produkt</th>
+                                        <th>Cena</th>
+                                        <th>Dostępność</th>
+                                        <th style="width: 150px">Ilość</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (products != null)
+                                    {
+                                        foreach (var product in products)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-bold">@product.Name</div>
+                                                    <div class="small text-muted">@product.Description</div>
+                                                </td>
+                                                <td>@product.Price.ToString("C")</td>
+                                                <td>
+                                                    <span class="badge @(product.StockQuantity > 0 ? "bg-success" : "bg-danger")">
+                                                        @product.StockQuantity st.
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" 
+                                                           name="productQuantities[@product.Id]" 
+                                                           class="form-control" 
+                                                           min="0" 
+                                                           max="@product.StockQuantity" 
+                                                           value="0" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-light me-md-2">Anuluj</a>
+                            <button type="submit" class="btn btn-success px-4 btn-lg">Złóż Zamówienie</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
