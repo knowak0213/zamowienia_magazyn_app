@@ -10,6 +10,8 @@ namespace zamowienia_magazyn_app.Models
         [Display(Name = "Data zamówienia")]
         public DateTime OrderDate { get; set; } = DateTime.Now;
 
+        public string? UserId { get; set; }
+
         public int ClientId { get; set; }
         
         [ForeignKey("ClientId")]

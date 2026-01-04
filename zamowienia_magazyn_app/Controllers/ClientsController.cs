@@ -1,93 +1,148 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using zamowienia_magazyn_app.Data;
 using zamowienia_magazyn_app.Models;
 
 namespace zamowienia_magazyn_app.Controllers
 {
     public class ClientsController : Controller
     {
-        // Public static list for Mock Data
-        public static List<Client> Clients = new List<Client>
-        {
-            new Client { Id = 1, FirstName = "Jan", LastName = "Kowalski", Email = "jan.kowalski@example.com", PhoneNumber = "123-456-789", Address = "Warszawa, ul. Złota 44" },
-            new Client { Id = 2, FirstName = "Anna", LastName = "Nowak", Email = "anna.nowak@example.com", PhoneNumber = "987-654-321", Address = "Kraków, Rynek Główny 1" },
-            new Client { Id = 3, FirstName = "Piotr", LastName = "Zieliński", Email = "p.zielinski@example.com", PhoneNumber = "555-666-777", Address = "Gdańsk, ul. Długa 5" }
-        };
+        private readonly ApplicationDbContext _context;
 
-        private static int _nextId = 4;
-
-        public IActionResult Index()
+        public ClientsController(ApplicationDbContext context)
         {
-            return View(Clients);
+            _context = context;
         }
 
-        public IActionResult Details(int id)
+        // GET: Clients
+        public async Task<IActionResult> Index()
         {
-            var client = Clients.FirstOrDefault(c => c.Id == id);
-            if (client == null) return NotFound();
+            return View(await _context.Clients.ToListAsync());
+        }
+
+        // GET: Clients/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var client = await _context.Clients
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
             return View(client);
         }
 
+        // GET: Clients/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Clients/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Client client)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,PhoneNumber,Address")] Client client)
         {
             if (ModelState.IsValid)
             {
-                client.Id = _nextId++;
-                Clients.Add(client);
+                _context.Add(client);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
         }
 
-        public IActionResult Edit(int id)
+        // GET: Clients/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var client = Clients.FirstOrDefault(c => c.Id == id);
-            if (client == null) return NotFound();
-            return View(client);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Client client)
-        {
-            if (id != client.Id) return NotFound();
-
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                var index = Clients.FindIndex(c => c.Id == id);
-                if (index != -1)
-                {
-                    Clients[index] = client;
-                    return RedirectToAction(nameof(Index));
-                }
+                return NotFound();
+            }
+
+            var client = await _context.Clients.FindAsync(id);
+            if (client == null)
+            {
                 return NotFound();
             }
             return View(client);
         }
 
-        public IActionResult Delete(int id)
+        // POST: Clients/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,Address")] Client client)
         {
-            var client = Clients.FirstOrDefault(c => c.Id == id);
-            if (client == null) return NotFound();
+            if (id != client.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(client);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ClientExists(client.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
             return View(client);
         }
 
+        // GET: Clients/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var client = await _context.Clients
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            return View(client);
+        }
+
+        // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var client = Clients.FirstOrDefault(c => c.Id == id);
+            var client = await _context.Clients.FindAsync(id);
             if (client != null)
             {
-                Clients.Remove(client);
+                _context.Clients.Remove(client);
             }
+            
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool ClientExists(int id)
+        {
+            return _context.Clients.Any(e => e.Id == id);
         }
     }
 }
