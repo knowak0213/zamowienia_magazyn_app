@@ -7,7 +7,7 @@ namespace zamowienia_magazyn_app.Data
     {
         public static async Task Initialize(IServiceProvider serviceProvider, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            // Ensure the database is created
+
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
             context.Database.EnsureCreated();
 
@@ -19,12 +19,10 @@ namespace zamowienia_magazyn_app.Data
                 var roleExist = await roleManager.RoleExistsAsync(roleName);
                 if (!roleExist)
                 {
-                    // Create the roles and seed them to the database
+
                     roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
-
-            // Create a default Admin user if not exists
             var adminUser = new IdentityUser
             {
                 UserName = "admin@zm.pl",
@@ -41,6 +39,24 @@ namespace zamowienia_magazyn_app.Data
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
+            }
+
+
+            if (!context.Products.Any())
+            {
+                var products = new Models.Product[]
+                {
+                    new Models.Product { Name = "Komputer", Price = 2500, StockQuantity = 10, Description = "Wydajny komputer stacjonarny" },
+                    new Models.Product { Name = "Myszka", Price = 50, StockQuantity = 50, Description = "Myszka optyczna" },
+                    new Models.Product { Name = "Klawiatura", Price = 120, StockQuantity = 30, Description = "Klawiatura mechaniczna" },
+                    new Models.Product { Name = "Głośniki", Price = 200, StockQuantity = 20, Description = "Głośniki stereo 2.1" },
+                    new Models.Product { Name = "Monitor", Price = 800, StockQuantity = 15, Description = "Monitor 24 cale Full HD" },
+                    new Models.Product { Name = "Słuchawki", Price = 150, StockQuantity = 40, Description = "Słuchawki nauszne z mikrofonem" },
+                    new Models.Product { Name = "Podkładka", Price = 20, StockQuantity = 100, Description = "Podkładka pod mysz" }
+                };
+
+                context.Products.AddRange(products);
+                context.SaveChanges();
             }
         }
     }

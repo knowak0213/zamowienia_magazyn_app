@@ -8,11 +8,13 @@ namespace zamowienia_magazyn_app.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly zamowienia_magazyn_app.Data.ApplicationDbContext _context;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, zamowienia_magazyn_app.Data.ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
@@ -31,6 +33,19 @@ namespace zamowienia_magazyn_app.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Client");
+                    
+                    var client = new zamowienia_magazyn_app.Models.Client
+                    {
+                        UserId = user.Id,
+                        FirstName = CapitalizeFirstLetter(model.FirstName),
+                        LastName = CapitalizeFirstLetter(model.LastName),
+                        Email = model.Email,
+                        PhoneNumber = model.PhoneNumber,
+                        Address = model.Address
+                    };
+                    _context.Clients.Add(client);
+                    await _context.SaveChangesAsync();
+                    
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -68,6 +83,15 @@ namespace zamowienia_magazyn_app.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        private string CapitalizeFirstLetter(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+            
+            input = input.Trim();
+            return char.ToUpper(input[0]) + input.Substring(1).ToLower();
         }
     }
 }

@@ -34,6 +34,7 @@ namespace zamowienia_magazyn_app.Controllers
             {
                 var orders = await _context.Orders
                     .Include(o => o.Client)
+                    .Include(o => o.OrderItems)
                     .Where(o => o.UserId == user.Id)
                     .OrderByDescending(o => o.OrderDate)
                     .ToListAsync();
@@ -53,7 +54,7 @@ namespace zamowienia_magazyn_app.Controllers
 
             if (order == null) return NotFound();
 
-            // Authorization check for details
+            
             if (!User.IsInRole("Admin"))
             {
                 var user = await _userManager.GetUserAsync(User);
@@ -68,31 +69,38 @@ namespace zamowienia_magazyn_app.Controllers
 
         public IActionResult Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "LastName");
-            ViewBag.Products = _context.Products.Where(p => p.StockQuantity > 0).ToList(); // Only show available products
+            ViewBag.Products = _context.Products.Where(p => p.StockQuantity > 0).ToList(); 
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int clientId, Dictionary<int, int> productQuantities)
+        public async Task<IActionResult> Create(Dictionary<int, int> productQuantities)
         {
-            if (clientId == 0)
-            {
-                ModelState.AddModelError("ClientId", "Wybierz klienta.");
-            }
-            
             var selectedProducts = productQuantities?.Where(x => x.Value > 0).ToList();
             if (selectedProducts == null || !selectedProducts.Any())
             {
                 ModelState.AddModelError("", "Wybierz przynajmniej jeden produkt.");
             }
 
-            // Database validation for Client
-            var client = await _context.Clients.FindAsync(clientId);
-            if (client == null) return NotFound();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
 
-            // Stock validation
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == user.Id);
+            if (client == null)
+            {
+                client = new Client
+                {
+                    UserId = user.Id,
+                    FirstName = user.Email?.Split('@')[0] ?? "User",
+                    LastName = "User",
+                    Email = user.Email ?? ""
+                };
+                _context.Clients.Add(client);
+                await _context.SaveChangesAsync();
+            }
+
+            
             foreach (var item in selectedProducts)
             {
                 var productToCheck = await _context.Products.FindAsync(item.Key);
@@ -106,19 +114,16 @@ namespace zamowienia_magazyn_app.Controllers
 
             if (!ModelState.IsValid)
             {
-                 ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "LastName", clientId);
                  ViewBag.Products = _context.Products.Where(p => p.StockQuantity > 0).ToList();
                 return View();
             }
 
-            var user = await _userManager.GetUserAsync(User);
-
             var order = new Order
             {
                 OrderDate = DateTime.Now,
-                ClientId = clientId,
+                ClientId = client.Id,
                 Client = client,
-                UserId = user?.Id,
+                UserId = user.Id,
                 Status = OrderStatus.New,
                 OrderItems = new List<OrderItem>()
             };
@@ -136,7 +141,7 @@ namespace zamowienia_magazyn_app.Controllers
                         UnitPrice = product.Price
                     });
 
-                    // Update Stock
+                    
                     product.StockQuantity -= item.Value;
                     _context.Update(product);
                 }
@@ -186,6 +191,51 @@ namespace zamowienia_magazyn_app.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(existingOrder);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var order = await _context.Orders
+                .Include(o => o.Client)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (order == null) return NotFound();
+
+            return View(order);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order != null)
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.StockQuantity += item.Quantity;
+                        _context.Update(product);
+                    }
+                }
+
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Zamówienie zostało usunięte, a produkty zwrócone do magazynu.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)

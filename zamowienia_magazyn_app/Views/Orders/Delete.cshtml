@@ -1,0 +1,66 @@
+@model zamowienia_magazyn_app.Models.Order
+
+@{
+    ViewData["Title"] = "Usuń Zamówienie";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Czy na pewno chcesz usunąć to zamówienie?</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        <strong>Uwaga!</strong> Tej operacji nie można cofnąć. Produkty z tego zamówienia zostaną zwrócone do magazynu.
+                    </div>
+
+                    <h5 class="mb-3">Szczegóły zamówienia:</h5>
+                    
+                    <dl class="row">
+                        <dt class="col-sm-4">Numer zamówienia:</dt>
+                        <dd class="col-sm-8">#@Model.Id</dd>
+
+                        <dt class="col-sm-4">Data zamówienia:</dt>
+                        <dd class="col-sm-8">@Model.OrderDate.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">Klient:</dt>
+                        <dd class="col-sm-8">@Model.Client?.FullName</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Client?.Email</dd>
+
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8"><span class="badge bg-secondary">@Model.Status</span></dd>
+
+                        <dt class="col-sm-4">Wartość:</dt>
+                        <dd class="col-sm-8"><strong>@Model.TotalAmount.ToString("C")</strong></dd>
+                    </dl>
+
+                    <h6 class="mt-4 mb-3">Produkty (zostaną zwrócone do magazynu):</h6>
+                    <ul class="list-group mb-4">
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @item.Product?.Name
+                                <span class="badge bg-primary rounded-pill">+@item.Quantity szt.</span>
+                            </li>
+                        }
+                    </ul>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">Anuluj</a>
+                            <button type="submit" class="btn btn-danger px-4">
+                                <i class="bi bi-trash"></i> Usuń zamówienie
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

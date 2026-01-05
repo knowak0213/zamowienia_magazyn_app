@@ -12,6 +12,26 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
+                <input asp-for="FirstName" class="form-control" aria-required="true" placeholder="Jan" />
+                <label asp-for="FirstName">Imię</label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="LastName" class="form-control" aria-required="true" placeholder="Kowalski" />
+                <label asp-for="LastName">Nazwisko</label>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="PhoneNumber" class="form-control" type="tel" placeholder="123456789" />
+                <label asp-for="PhoneNumber">Numer telefonu (opcjonalnie)</label>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Address" class="form-control" placeholder="Warszawa" />
+                <label asp-for="Address">Miasto/Adres (opcjonalnie)</label>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
                 <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Email">Email</label>
                 <span asp-validation-for="Email" class="text-danger"></span>

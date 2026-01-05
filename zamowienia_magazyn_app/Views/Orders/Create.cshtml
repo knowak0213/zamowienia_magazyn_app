@@ -16,13 +16,6 @@
                     <form asp-action="Create">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Wybierz Klienta</label>
-                            <select name="clientId" class="form-select form-select-lg" asp-items="ViewBag.ClientId">
-                                <option value="">-- Wybierz klienta --</option>
-                            </select>
-                            <span asp-validation-for="ClientId" class="text-danger"></span>
-                        </div>
 
                         <h5 class="mb-3 fw-bold border-bottom pb-2">Wybierz Produkty</h5>
                         

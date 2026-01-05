@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using zamowienia_magazyn_app.Data;
 using zamowienia_magazyn_app.Models;
@@ -8,10 +9,12 @@ namespace zamowienia_magazyn_app.Controllers
     public class ClientsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ClientsController(ApplicationDbContext context)
+        public ClientsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Clients
@@ -133,10 +136,27 @@ namespace zamowienia_magazyn_app.Controllers
             var client = await _context.Clients.FindAsync(id);
             if (client != null)
             {
+                var hasOrders = await _context.Orders.AnyAsync(o => o.ClientId == id);
+                if (hasOrders)
+                {
+                    TempData["Error"] = "Nie można usunąć klienta, który ma powiązane zamówienia.";
+                    return RedirectToAction(nameof(Index));
+                }
+                
+                if (client.UserId != null)
+                {
+                    var user = await _userManager.FindByIdAsync(client.UserId);
+                    if (user != null)
+                    {
+                        await _userManager.DeleteAsync(user);
+                    }
+                }
+
                 _context.Clients.Remove(client);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Klient oraz konto użytkownika zostały usunięte.";
             }
             
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

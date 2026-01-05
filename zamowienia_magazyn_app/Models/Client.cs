@@ -6,6 +6,8 @@ namespace zamowienia_magazyn_app.Models
     {
         public int Id { get; set; }
 
+        public string? UserId { get; set; }
+
         [Required(ErrorMessage = "Imię jest wymagane.")]
         [Display(Name = "Imię")]
         public string FirstName { get; set; } = string.Empty;
