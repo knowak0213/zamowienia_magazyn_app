@@ -17,13 +17,13 @@ namespace zamowienia_magazyn_app.Controllers
             _userManager = userManager;
         }
 
-        // GET: Clients
+       
         public async Task<IActionResult> Index()
         {
             return View(await _context.Clients.ToListAsync());
         }
 
-        // GET: Clients/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,13 +41,13 @@ namespace zamowienia_magazyn_app.Controllers
             return View(client);
         }
 
-        // GET: Clients/Create
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clients/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,PhoneNumber,Address")] Client client)
@@ -61,7 +61,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(client);
         }
 
-        // GET: Clients/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,7 +77,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(client);
         }
 
-        // POST: Clients/Edit/5
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,Address")] Client client)
@@ -110,7 +110,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(client);
         }
 
-        // GET: Clients/Delete/5
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,7 +128,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(client);
         }
 
-        // POST: Clients/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

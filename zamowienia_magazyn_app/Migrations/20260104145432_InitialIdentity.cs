@@ -292,7 +292,7 @@ namespace zamowienia_magazyn_app.Migrations
                 column: "ClientId");
         }
 
-        /// <inheritdoc />
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

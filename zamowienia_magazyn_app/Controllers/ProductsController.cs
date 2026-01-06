@@ -15,13 +15,13 @@ namespace zamowienia_magazyn_app.Controllers
             _context = context;
         }
 
-        // GET: Products
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Products.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,14 +39,14 @@ namespace zamowienia_magazyn_app.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
+        
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Products/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -61,7 +61,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(product);
         }
 
-        // GET: Products/Edit/5
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -78,7 +78,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -112,7 +112,7 @@ namespace zamowienia_magazyn_app.Controllers
             return View(product);
         }
 
-        // GET: Products/Delete/5
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -131,7 +131,6 @@ namespace zamowienia_magazyn_app.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
