@@ -6,6 +6,7 @@ using zamowienia_magazyn_app.Models;
 
 namespace zamowienia_magazyn_app.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class ClientsController : Controller
     {
         private readonly ApplicationDbContext _context;

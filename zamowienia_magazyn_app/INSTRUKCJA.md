@@ -3,7 +3,7 @@
 Dokumentacja zawiera kroki niezbędne do uruchomienia i obsługi systemu zamówień magazynowych.
 
 ## Wymagania Techniczne
-*   Zainstalowany pakiet **.NET SDK** (wersja 10.0 lub nowsza).
+*   Zainstalowany pakiet **.NET SDK** (wersja 8.0 lub nowsza).
 *   Dostęp do lokalnej bazy danych (LocalDB) - standardowo instalowana z Visual Studio.
 
 ## Szybki Start (Konsola)
