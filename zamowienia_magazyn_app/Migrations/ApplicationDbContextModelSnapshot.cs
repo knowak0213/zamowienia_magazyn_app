@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using zamowienia_magazyn_app.Data;
 
-#nullable disable
+
 
 namespace zamowienia_magazyn_app.Migrations
 {
@@ -14,7 +14,6 @@ namespace zamowienia_magazyn_app.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -416,7 +415,6 @@ namespace zamowienia_magazyn_app.Migrations
                 {
                     b.Navigation("OrderItems");
                 });
-#pragma warning restore 612, 618
         }
     }
 }

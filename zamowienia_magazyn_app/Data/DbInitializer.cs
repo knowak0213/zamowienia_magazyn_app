@@ -49,8 +49,8 @@ namespace zamowienia_magazyn_app.Data
                     new Models.Product { Name = "Komputer", Price = 2500, StockQuantity = 10, Description = "Wydajny komputer stacjonarny" },
                     new Models.Product { Name = "Myszka", Price = 50, StockQuantity = 50, Description = "Myszka optyczna" },
                     new Models.Product { Name = "Klawiatura", Price = 120, StockQuantity = 30, Description = "Klawiatura mechaniczna" },
-                    new Models.Product { Name = "Głośniki", Price = 200, StockQuantity = 20, Description = "Głośniki stereo 2.1" },
-                    new Models.Product { Name = "Monitor", Price = 800, StockQuantity = 15, Description = "Monitor 24 cale Full HD" },
+                    new Models.Product { Name = "Głośniki", Price = 200, StockQuantity = 20, Description = "Głośniki stereo" },
+                    new Models.Product { Name = "Monitor", Price = 800, StockQuantity = 15, Description = "Monitor 24 cale" },
                     new Models.Product { Name = "Słuchawki", Price = 150, StockQuantity = 40, Description = "Słuchawki nauszne z mikrofonem" },
                     new Models.Product { Name = "Podkładka", Price = 20, StockQuantity = 100, Description = "Podkładka pod mysz" }
                 };
