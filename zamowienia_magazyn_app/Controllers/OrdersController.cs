@@ -27,7 +27,7 @@ namespace zamowienia_magazyn_app.Controllers
 
             if (await _userManager.IsInRoleAsync(user, "Admin"))
             {
-                var orders = await _context.Orders.Include(o => o.Client).OrderByDescending(o => o.OrderDate).ToListAsync();
+                var orders = await _context.Orders.Include(o => o.Client).Include(o => o.OrderItems).OrderByDescending(o => o.OrderDate).ToListAsync();
                 return View(orders);
             }
             else
