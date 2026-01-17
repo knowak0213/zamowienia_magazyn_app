@@ -1,8 +1,30 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Strona Główna";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row min-vh-75 align-items-center justify-content-center text-center">
+    <div class="col-lg-8">
+        <div class="position-relative">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: var(--secondary); opacity: 0.05; filter: blur(80px); border-radius: 50%; z-index: -1;"></div>
+            
+            <h1 class="display-3 fw-bold mb-4" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Zarządzaj Magazynem<br />z Łatwością
+            </h1>
+            <p class="lead text-muted mb-5">
+                Nowoczesny system obsługi zamówień i stanów magazynowych.
+                Śledź, edytuj i realizuj zamówienia w jednym miejscu.
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+                <a asp-controller="Products" asp-action="Index" class="btn btn-primary btn-lg px-5 py-3">
+                    <i class="bi bi-grid me-2"></i> Zobacz Produkty
+                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Orders" asp-action="Index" class="btn btn-outline-primary btn-lg px-5 py-3">
+                        <i class="bi bi-box-seam me-2"></i> Zamówienia
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
 </div>
