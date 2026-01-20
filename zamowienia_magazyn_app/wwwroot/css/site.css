@@ -22,20 +22,34 @@ html {
 body {
   font-family: var(--font-main);
   background-color: #f3f4f6;
-  background-image: 
-    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-    radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-    radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
   background-size: 100% 100vh;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: var(--text-main);
   min-height: 100vh;
-  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+body>header {
+  flex-shrink: 0;
+}
+
+body>.container {
+  flex: 1 0 auto;
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-main);
@@ -92,7 +106,7 @@ a {
 
 .card-header {
   background: transparent;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   font-weight: 600;
 }
 
@@ -166,7 +180,8 @@ a {
 }
 
 /* Forms */
-.form-control, .form-select {
+.form-control,
+.form-select {
   border-radius: 8px;
   padding: 0.75rem 1rem;
   border: 1px solid #e2e8f0;
@@ -174,7 +189,8 @@ a {
   transition: all 0.2s;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
   background-color: white;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
@@ -190,8 +206,11 @@ a {
 
 /* Footer */
 footer.footer {
-  background: white;
-  border-top: 1px solid #eaeaea;
-  padding: 1.5rem 0;
-  margin-top: auto;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: var(--glass-border);
+  padding: 1rem 0;
+  flex-shrink: 0;
+  margin-top: 2rem;
 }
