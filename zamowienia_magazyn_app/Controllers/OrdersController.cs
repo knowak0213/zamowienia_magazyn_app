@@ -52,9 +52,6 @@ namespace zamowienia_magazyn_app.Controllers
                 .ThenInclude(oi => oi.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (order == null) return NotFound();
-
-            
             if (!User.IsInRole("Admin"))
             {
                 var user = await _userManager.GetUserAsync(User);
@@ -97,10 +94,9 @@ namespace zamowienia_magazyn_app.Controllers
                     Email = user.Email ?? ""
                 };
                 _context.Clients.Add(client);
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             }
 
-            
             foreach (var item in selectedProducts)
             {
                 var productToCheck = await _context.Products.FindAsync(item.Key);
@@ -141,7 +137,6 @@ namespace zamowienia_magazyn_app.Controllers
                         UnitPrice = product.Price
                     });
 
-                    
                     product.StockQuantity -= item.Value;
                     _context.Update(product);
                 }
@@ -173,7 +168,6 @@ namespace zamowienia_magazyn_app.Controllers
             var existingOrder = await _context.Orders.FindAsync(id);
             if (existingOrder == null) return NotFound();
 
-            // Only update status, keep other fields
             existingOrder.Status = order.Status;
 
             if (ModelState.IsValid)

@@ -18,37 +18,26 @@ namespace zamowienia_magazyn_app.Controllers
             _userManager = userManager;
         }
 
-       
         public async Task<IActionResult> Index()
         {
             return View(await _context.Clients.ToListAsync());
         }
 
-        
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (client == null)
-            {
-                return NotFound();
-            }
+            var client = await _context.Clients.FirstOrDefaultAsync(m => m.Id == id);
+            if (client == null) return NotFound();
 
             return View(client);
         }
 
-        
         public IActionResult Create()
         {
             return View();
         }
 
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,PhoneNumber,Address")] Client client)
@@ -62,31 +51,21 @@ namespace zamowienia_magazyn_app.Controllers
             return View(client);
         }
 
-        
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var client = await _context.Clients.FindAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
+            if (client == null) return NotFound();
+
             return View(client);
         }
 
-       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,Address")] Client client)
         {
-            if (id != client.Id)
-            {
-                return NotFound();
-            }
+            if (id != client.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -97,39 +76,24 @@ namespace zamowienia_magazyn_app.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClientExists(client.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ClientExists(client.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
         }
 
-        
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (client == null)
-            {
-                return NotFound();
-            }
+            var client = await _context.Clients.FirstOrDefaultAsync(m => m.Id == id);
+            if (client == null) return NotFound();
 
             return View(client);
         }
 
-        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -147,10 +111,7 @@ namespace zamowienia_magazyn_app.Controllers
                 if (client.UserId != null)
                 {
                     var user = await _userManager.FindByIdAsync(client.UserId);
-                    if (user != null)
-                    {
-                        await _userManager.DeleteAsync(user);
-                    }
+                    if (user != null) await _userManager.DeleteAsync(user);
                 }
 
                 _context.Clients.Remove(client);

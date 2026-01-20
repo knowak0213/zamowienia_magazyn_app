@@ -7,7 +7,6 @@ namespace zamowienia_magazyn_app.Data
     {
         public static async Task Initialize(IServiceProvider serviceProvider, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
             context.Database.EnsureCreated();
 
@@ -19,7 +18,6 @@ namespace zamowienia_magazyn_app.Data
                 var roleExist = await roleManager.RoleExistsAsync(roleName);
                 if (!roleExist)
                 {
-
                     roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
@@ -40,7 +38,6 @@ namespace zamowienia_magazyn_app.Data
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
             }
-
 
             if (!context.Products.Any())
             {
