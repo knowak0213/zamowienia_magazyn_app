@@ -52,6 +52,9 @@ namespace zamowienia_magazyn_app.Controllers
                 .ThenInclude(oi => oi.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
+            if (order == null) return NotFound();
+
+            
             if (!User.IsInRole("Admin"))
             {
                 var user = await _userManager.GetUserAsync(User);
